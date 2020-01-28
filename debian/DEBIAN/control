@@ -1,0 +1,7 @@
+Package: rhasspy-fuzzywuzzy
+Version: ${version}
+Section: utils
+Priority: optional
+Architecture: ${architecture}
+Maintainer: Michael Hansen
+Description: Rhasspy intent recognition with fuzzywuzzy
