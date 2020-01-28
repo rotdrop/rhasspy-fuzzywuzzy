@@ -1,4 +1,4 @@
-"""Setup script for rhasspy-fuzzywuzzy-hermes package"""
+"""Setup script for rhasspy-fuzzywuzzy package"""
 import os
 
 import setuptools
@@ -14,12 +14,13 @@ with open("VERSION", "r") as version_file:
     version = version_file.read().strip()
 
 setuptools.setup(
-    name="rhasspy-fuzzywuzzy-hermes",
+    name="rhasspy-fuzzywuzzy",
     version=version,
     author="Michael Hansen",
     author_email="hansen.mike@gmail.com",
-    url="https://github.com/rhasspy/rhasspy-fuzzywuzzy-hermes",
+    url="https://github.com/rhasspy/rhasspy-fuzzywuzzy",
     packages=setuptools.find_packages(),
+    package_data={"rhasspyfuzzywuzzy": ["py.typed"]},
     install_requires=requirements,
     classifiers=[
         "Programming Language :: Python :: 3",
