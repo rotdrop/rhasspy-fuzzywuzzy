@@ -1,11 +1,11 @@
-# Rhasspy Fuzzywuzzy Hermes
+# Rhasspy Fuzzywuzzy
 
-Implements `hermes/nlu` functionality from [Hermes protocol](https://docs.snips.ai/reference/hermes) using [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy).
+Intent recognition for Rhasspy using [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy).
 
 ## Running With Docker
 
 ```bash
-docker run -it rhasspy/rhasspy-fuzzywuzzy-hermes:<VERSION> <ARGS>
+docker run -it rhasspy/rhasspy-fuzzywuzzy:<VERSION> <ARGS>
 ```
 
 ## Building From Source
@@ -13,15 +13,15 @@ docker run -it rhasspy/rhasspy-fuzzywuzzy-hermes:<VERSION> <ARGS>
 Clone the repository and create the virtual environment:
 
 ```bash
-git clone https://github.com/rhasspy/rhasspy-fuzzywuzzy-hermes.git
-cd rhasspy-fuzzywuzzy-hermes
+git clone https://github.com/rhasspy/rhasspy-fuzzywuzzy.git
+cd rhasspy-fuzzywuzzy
 make venv
 ```
 
-Run the `bin/rhasspy-fuzzywuzzy-hermes` script to access the command-line interface:
+Run the `bin/rhasspy-fuzzywuzzy` script to access the command-line interface:
 
 ```bash
-bin/rhasspy-fuzzywuzzy-hermes --help
+bin/rhasspy-fuzzywuzzy --help
 ```
 
 ## Building the Debian Package
@@ -44,36 +44,71 @@ source .venv/bin/activate
 make docker
 ```
 
-This will create a Docker image tagged `rhasspy/rhasspy-fuzzywuzzy-hermes:<VERSION>` where `VERSION` comes from the file of the same name in the source root directory.
+This will create a Docker image tagged `rhasspy/rhasspy-fuzzywuzzy:<VERSION>` where `VERSION` comes from the file of the same name in the source root directory.
 
 NOTE: If you add things to the Docker image, make sure to whitelist them in `.dockerignore`.
 
 ## Command-Line Options
 
 ```
-usage: rhasspy-fuzzywuzzy-hermes [-h] [--examples EXAMPLES]
-                                 [--intent-graph INTENT_GRAPH]
-                                 [--sentences SENTENCES] [--slots SLOTS]
-                                 [--slot-programs SLOT_PROGRAMS]
-                                 [--watch-delay WATCH_DELAY] [--host HOST]
-                                 [--port PORT] [--siteId SITEID]
-                                 [--language LANGUAGE] [--debug]
+usage: rhasspy-fuzzywuzzy [-h] [--debug] {recognize,train} ...
+
+positional arguments:
+  {recognize,train}
+    recognize        Do intent recognition
+    train            Generate intent examples from sentences and slots
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --debug            Print DEBUG messages to the console
+```
+
+### Recognize
+
+```
+usage: rhasspy-fuzzywuzzy recognize [-h] --examples EXAMPLES --intent-graph
+                                    INTENT_GRAPH [--replace-numbers]
+                                    [--language LANGUAGE]
+                                    [--word-casing {upper,lower,ignore}]
+                                    [query [query ...]]
+
+positional arguments:
+  query                 Query input sentences
 
 optional arguments:
   -h, --help            show this help message and exit
   --examples EXAMPLES   Path to examples JSON file
   --intent-graph INTENT_GRAPH
                         Path to intent graph JSON file
+  --replace-numbers     Automatically replace numbers in query text
+  --language LANGUAGE   Language used for number replacement
+  --word-casing {upper,lower,ignore}
+                        Case transformation applied to query text
+```
+
+### Train
+
+```
+usage: rhasspy-fuzzywuzzy train [-h] [--examples EXAMPLES]
+                                [--intent-graph INTENT_GRAPH]
+                                [--sentences SENTENCES] [--slots SLOTS]
+                                [--slot-programs SLOT_PROGRAMS]
+                                [--replace-numbers] [--language LANGUAGE]
+                                [--word-casing {upper,lower,ignore}]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --examples EXAMPLES   Path to write examples JSON file
+  --intent-graph INTENT_GRAPH
+                        Path to write intent graph JSON file
   --sentences SENTENCES
-                        Watch sentences.ini file(s) for changes and re-train
+                        Paths to sentences ini files
   --slots SLOTS         Directories with static slot text files
   --slot-programs SLOT_PROGRAMS
                         Directories with slot programs
-  --watch-delay WATCH_DELAY
-                        Seconds between polling sentence file(s) for training
-  --host HOST           MQTT host (default: localhost)
-  --port PORT           MQTT port (default: 1883)
-  --siteId SITEID       Hermes siteId(s) to listen for (default: all)
+  --replace-numbers     Automatically replace numbers and number ranges in
+                        sentences/slots
   --language LANGUAGE   Language used for number replacement
-  --debug               Print DEBUG messages to the console
+  --word-casing {upper,lower,ignore}
+                        Case transformation applied to words
 ```
