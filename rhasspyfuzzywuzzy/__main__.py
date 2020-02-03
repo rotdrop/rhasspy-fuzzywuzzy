@@ -10,7 +10,8 @@ from pathlib import Path
 import rhasspynlu
 from rhasspynlu.intent import Recognition
 
-from . import train as fuzzywuzzy_train, recognize as fuzzywuzzy_recognize
+from . import recognize as fuzzywuzzy_recognize
+from . import train as fuzzywuzzy_train
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -88,26 +89,6 @@ def get_args() -> argparse.Namespace:
     train_parser.add_argument(
         "--sentences", action="append", help="Paths to sentences ini files"
     )
-    train_parser.add_argument(
-        "--slots", action="append", help="Directories with static slot text files"
-    )
-    train_parser.add_argument(
-        "--slot-programs", action="append", help="Directories with slot programs"
-    )
-    train_parser.add_argument(
-        "--replace-numbers",
-        action="store_true",
-        help="Automatically replace numbers and number ranges in sentences/slots",
-    )
-    train_parser.add_argument(
-        "--language", default="en", help="Language used for number replacement"
-    )
-    train_parser.add_argument(
-        "--word-casing",
-        choices=["upper", "lower", "ignore"],
-        default="ignore",
-        help="Case transformation applied to words",
-    )
 
     return parser.parse_args()
 
@@ -182,13 +163,19 @@ def train(args: argparse.Namespace):
     # Convert to Paths
     if args.examples:
         args.examples = Path(args.examples)
-    else:
-        assert (
-            args.intent_graph
-        ), "--intent-graph is required when examples are printed to stdout"
 
     if args.intent_graph:
+        # Load intent graph from file
         args.intent_graph = Path(args.intent_graph)
+
+        with open(args.intent_graph, "r") as graph_file:
+            graph_dict = json.load(graph_file)
+    else:
+        # Load intent graph from stdin
+        if os.isatty(sys.stdin.fileno()):
+            print("Reading intent graph JSON from stdin...", file=sys.stderr)
+
+        graph_dict = json.load(sys.stdin)
 
     if args.slots:
         args.slots = [Path(p) for p in args.slots]
@@ -196,27 +183,10 @@ def train(args: argparse.Namespace):
     if args.slot_programs:
         args.slot_programs = [Path(p) for p in args.slot_programs]
 
-    if args.sentences:
-        # Load sentences from text files
-        sentences = {p: Path(p).read_text() for p in args.sentences}
-    else:
-        # Load sentences from stdin
-        if os.isatty(sys.stdin.fileno()):
-            print("Reading sentences from stdin...", file=sys.stderr)
-
-        sentences = {"<stdin>": sys.stdin.read()}
-
     # -------------------------------------------------------------------------
 
     # Do training
-    intent_graph, examples = fuzzywuzzy_train(
-        sentences,
-        slots_dirs=args.slots,
-        slot_programs_dirs=args.slot_programs,
-        replace_numbers=args.replace_numbers,
-        language=args.language,
-        word_transform=get_word_transform(args.word_casing),
-    )
+    examples = fuzzywuzzy_train(graph_dict)
 
     if args.examples:
         # Write examples to JSON file
@@ -224,19 +194,11 @@ def train(args: argparse.Namespace):
             json.dump(examples, examples_file)
 
         _LOGGER.debug("Wrote %s", str(args.examples))
-
-    if args.intent_graph:
-        # Write graph to JSON file
-        with open(args.intent_graph, "w") as graph_file:
-            graph_dict = rhasspynlu.graph_to_json(intent_graph)
-            json.dump(graph_dict, graph_file)
-
-        _LOGGER.debug("Wrote %s", str(args.intent_graph))
-
-    # Write results to stdout
-    json.dump(examples, sys.stdout)
-    print("")
-    sys.stdout.flush()
+    else:
+        # Write results to stdout
+        json.dump(examples, sys.stdout)
+        print("")
+        sys.stdout.flush()
 
 
 # -----------------------------------------------------------------------------

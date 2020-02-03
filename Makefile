@@ -56,7 +56,7 @@ docker: pyinstaller
 
 deploy:
 	echo "$$DOCKER_PASSWORD" | docker login -u "$$DOCKER_USERNAME" --password-stdin
-	docker push rhasspy/$(PACKAGE_NAME):$(version)
+	docker push "rhasspy/$(PACKAGE_NAME):$(version)"
 
 # -----------------------------------------------------------------------------
 # Debian
