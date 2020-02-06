@@ -35,7 +35,7 @@ def train(graph_dict: typing.Dict[str, typing.Any]) -> ExamplesType:
 
 
 def generate_examples(
-    intent_graph: nx.DiGraph
+    intent_graph: nx.DiGraph,
 ) -> typing.Iterable[typing.Tuple[str, typing.List[str], typing.List[int]]]:
     """Generate all possible sentences/paths from an intent graph."""
     n_data = intent_graph.nodes(data=True)
