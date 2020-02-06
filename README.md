@@ -1,5 +1,10 @@
 # Rhasspy Fuzzywuzzy
 
+[![Continous Integration](https://github.com/rhasspy/rhasspy-fuzzywuzzy/workflows/Tests/badge.svg)](https://github.com/rhasspy/rhasspy-fuzzywuzzy/actions)
+[![PyPI package version](https://img.shields.io/pypi/v/rhasspy-fuzzywuzzy.svg)](https://pypi.org/project/rhasspy-fuzzywuzzy)
+[![Python versions](https://img.shields.io/pypi/pyversions/rhasspy-fuzzywuzzy.svg)](https://www.python.org)
+[![GitHub license](https://img.shields.io/github/license/rhasspy/rhasspy-fuzzywuzzy.svg)](https://github.com/rhasspy/rhasspy-fuzzywuzzy/blob/master/LICENSE)
+
 Intent recognition for Rhasspy using [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy).
 
 ## Running With Docker
