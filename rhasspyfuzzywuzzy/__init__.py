@@ -42,8 +42,8 @@ def recognize(
     choices: typing.Dict[str, typing.List[int]] = {
         text: path
         for intent_name, paths in examples.items()
-        for text, path in paths.items()
         if intent_filter(intent_name)
+        for text, path in paths.items()
     }
 
     # Find closest match

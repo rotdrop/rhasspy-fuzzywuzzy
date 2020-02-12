@@ -114,7 +114,7 @@ def recognize(args: argparse.Namespace):
             examples = json.load(examples_file)
 
         _LOGGER.debug("Processing sentences")
-        word_transform = get_word_transform(args.word_casing) or (lambda s: s)
+        word_transform = get_word_transform(args.word_casing)
 
         # Process queries
         if args.query:
@@ -204,7 +204,7 @@ def train(args: argparse.Namespace):
 # -----------------------------------------------------------------------------
 
 
-def get_word_transform(name: str) -> typing.Optional[typing.Callable[[str], str]]:
+def get_word_transform(name: str) -> typing.Callable[[str], str]:
     """Gets a word transformation function by name."""
     if name == "upper":
         return str.upper
@@ -212,7 +212,7 @@ def get_word_transform(name: str) -> typing.Optional[typing.Callable[[str], str]
     if name == "lower":
         return str.lower
 
-    return None
+    return lambda s: s
 
 
 # -----------------------------------------------------------------------------
