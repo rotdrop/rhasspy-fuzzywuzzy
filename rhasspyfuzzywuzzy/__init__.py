@@ -21,23 +21,12 @@ def recognize(
     intent_graph: nx.DiGraph,
     examples: ExamplesType,
     intent_filter: typing.Optional[typing.Callable[[str], bool]] = None,
-    replace_numbers: bool = True,
-    language: str = "en",
     extra_converters: typing.Optional[
         typing.Dict[str, typing.Callable[..., typing.Any]]
     ] = None,
 ) -> typing.List[Recognition]:
     """Find the closest matching intent(s)."""
     start_time = time.perf_counter()
-
-    if replace_numbers:
-        # 75 -> seventy five
-        words = rhasspynlu.numbers.replace_numbers(
-            input_text.split(), language=language
-        )
-
-        input_text = " ".join(words)
-
     intent_filter = intent_filter or (lambda i: True)
     choices: typing.Dict[str, typing.List[int]] = {
         text: path
