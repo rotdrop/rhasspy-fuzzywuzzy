@@ -59,14 +59,6 @@ def get_args() -> argparse.Namespace:
         "--intent-graph", required=True, help="Path to intent graph JSON file"
     )
     recognize_parser.add_argument(
-        "--replace-numbers",
-        action="store_true",
-        help="Automatically replace numbers in query text",
-    )
-    recognize_parser.add_argument(
-        "--language", default="en", help="Language used for number replacement"
-    )
-    recognize_parser.add_argument(
         "--word-casing",
         choices=["upper", "lower", "ignore"],
         default="ignore",
@@ -131,13 +123,7 @@ def recognize(args: argparse.Namespace):
             sentence = word_transform(sentence)
 
             # Do recognition
-            recognitions = fuzzywuzzy_recognize(
-                sentence,
-                intent_graph,
-                examples,
-                replace_numbers=args.replace_numbers,
-                language=args.language,
-            )
+            recognitions = fuzzywuzzy_recognize(sentence, intent_graph, examples)
 
             if recognitions:
                 # Intent recognized
