@@ -1,6 +1,7 @@
 """Training methods for rhasspyfuzzywuzzy"""
 import logging
 import typing
+from collections import defaultdict
 
 import networkx as nx
 import rhasspynlu
@@ -12,18 +13,15 @@ _LOGGER = logging.getLogger(__name__)
 # -----------------------------------------------------------------------------
 
 
-def train(graph_dict: typing.Dict[str, typing.Any]) -> ExamplesType:
+def train(intent_graph: nx.DiGraph) -> ExamplesType:
     """Generate examples from intent graph."""
-
-    # Convert to directed graph
-    intent_graph = rhasspynlu.json_to_graph(graph_dict)
 
     # Generate all possible intents
     _LOGGER.debug("Generating examples")
-    examples: ExamplesType = {
-        intent_name: {" ".join(words): path}
-        for intent_name, words, path in generate_examples(intent_graph)
-    }
+    examples: ExamplesType = defaultdict(dict)
+    for intent_name, words, path in generate_examples(intent_graph):
+        sentence = " ".join(words)
+        examples[intent_name][sentence] = path
 
     _LOGGER.debug("Examples generated")
 
