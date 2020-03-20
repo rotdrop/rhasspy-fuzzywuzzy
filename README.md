@@ -5,7 +5,7 @@
 [![Python versions](https://img.shields.io/pypi/pyversions/rhasspy-fuzzywuzzy.svg)](https://www.python.org)
 [![GitHub license](https://img.shields.io/github/license/rhasspy/rhasspy-fuzzywuzzy.svg)](https://github.com/rhasspy/rhasspy-fuzzywuzzy/blob/master/LICENSE)
 
-Intent recognition for Rhasspy using [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy).
+Intent recognition for Rhasspy using [rapidfuzz](https://github.com/rhasspy/rapidfuzz).
 
 ## Running With Docker
 

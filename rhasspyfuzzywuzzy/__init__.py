@@ -1,10 +1,10 @@
-"""Rhasspy intent recognition with fuzzywuzzy"""
+"""Rhasspy intent recognition with rapidfuzz"""
 import logging
 import time
 import typing
 
-import fuzzywuzzy.process
 import networkx as nx
+import rapidfuzz.process as fuzzy_process
 import rhasspynlu
 from rhasspynlu.intent import Recognition
 
@@ -36,7 +36,7 @@ def recognize(
     }
 
     # Find closest match
-    best_text, best_score = fuzzywuzzy.process.extractOne(input_text, choices.keys())
+    best_text, best_score = fuzzy_process.extractOne(input_text, choices.keys())
     _LOGGER.debug("input=%s, match=%s, score=%s", input_text, best_text, best_score)
     best_path = choices[best_text]
 
