@@ -21,7 +21,7 @@ check:
 	scripts/check-code.sh $(PYTHON_FILES)
 
 test:
-	echo "No tests yet"
+	scripts/run-tests.sh
 
 coverage:
 	coverage report -m
