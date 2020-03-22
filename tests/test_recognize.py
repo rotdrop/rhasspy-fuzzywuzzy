@@ -1,12 +1,12 @@
 """Test cases for recognition functions."""
 import unittest
-from pathlib import Path
 
-from rhasspyfuzzywuzzy import recognize, train
 from rhasspynlu.ini_jsgf import parse_ini
-from rhasspynlu.intent import Entity, Intent, Recognition
+from rhasspynlu.intent import Intent, Recognition
 from rhasspynlu.jsgf import Sentence
 from rhasspynlu.jsgf_graph import intents_to_graph
+
+from rhasspyfuzzywuzzy import recognize, train
 
 
 class RecognizeTestCase(unittest.TestCase):

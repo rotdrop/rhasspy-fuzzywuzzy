@@ -4,10 +4,9 @@ import time
 import typing
 
 import networkx as nx
+import rapidfuzz.process as fuzzy_process
 import rhasspynlu
 from rhasspynlu.intent import Recognition
-
-import rapidfuzz.process as fuzzy_process
 
 from .const import ExamplesType
 from .train import train
