@@ -10,6 +10,8 @@ SHELL_FILES = bin/* debian/bin/*
 version := $(shell cat VERSION)
 architecture := $(shell bash architecture.sh)
 
+all: venv
+
 # -----------------------------------------------------------------------------
 # Python
 # -----------------------------------------------------------------------------
