@@ -45,9 +45,8 @@ def recognize(
         best_path, intent_graph, extra_converters=extra_converters
     )
 
-    assert recognition
-    assert recognition.intent
-    recognition.intent.confidence = best_score / 100
+    assert recognition and recognition.intent, "Failed to find a match"
+    recognition.intent.confidence = best_score / 100.0
     recognition.recognize_seconds = end_time - start_time
     recognition.raw_text = input_text
     recognition.raw_tokens = input_text.split()
