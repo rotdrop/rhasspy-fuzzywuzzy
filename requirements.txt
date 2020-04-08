@@ -1,3 +1,3 @@
 networkx==2.4
-rapidfuzz==0.2.1
+rapidfuzz==0.6.8
 rhasspy-nlu==0.1.8

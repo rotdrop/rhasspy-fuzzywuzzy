@@ -4,4 +4,4 @@ Section: utils
 Priority: optional
 Architecture: ${architecture}
 Maintainer: Michael Hansen
-Description: Rhasspy intent recognition with fuzzywuzzy
+Description: Rhasspy intent recognition with rapidfuzz
