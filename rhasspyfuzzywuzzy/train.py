@@ -4,6 +4,7 @@ import typing
 from collections import defaultdict
 
 import networkx as nx
+import rapidfuzz.utils as fuzz_utils
 import rhasspynlu
 
 from .const import ExamplesType
@@ -20,7 +21,7 @@ def train(intent_graph: nx.DiGraph) -> ExamplesType:
     _LOGGER.debug("Generating examples")
     examples: ExamplesType = defaultdict(dict)
     for intent_name, words, path in generate_examples(intent_graph):
-        sentence = " ".join(words)
+        sentence = fuzz_utils.default_process(" ".join(words))
         examples[intent_name][sentence] = path
 
     _LOGGER.debug("Examples generated")

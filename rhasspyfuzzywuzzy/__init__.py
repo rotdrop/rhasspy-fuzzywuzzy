@@ -5,6 +5,7 @@ import typing
 
 import networkx as nx
 import rapidfuzz.process as fuzzy_process
+import rapidfuzz.utils as fuzz_utils
 import rhasspynlu
 from rhasspynlu.intent import Recognition
 
@@ -36,7 +37,10 @@ def recognize(
     }
 
     # Find closest match
-    best_text, best_score = fuzzy_process.extractOne(input_text, choices.keys())
+    # pylint: disable=unpacking-non-sequence
+    best_text, best_score = fuzzy_process.extractOne(
+        fuzz_utils.default_process(input_text), choices.keys(), processor=None
+    )
     _LOGGER.debug("input=%s, match=%s, score=%s", input_text, best_text, best_score)
     best_path = choices[best_text]
 
