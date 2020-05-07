@@ -17,7 +17,7 @@ class RecognizeTestCase(unittest.TestCase):
         intents = parse_ini(
             """
         [TestIntent]
-        this is a test
+        this is a test?
         """
         )
 
@@ -26,14 +26,15 @@ class RecognizeTestCase(unittest.TestCase):
 
         # Exact
         recognitions = zero_times(recognize("this is a test", graph, examples))
+
         self.assertEqual(
             recognitions,
             [
                 Recognition(
                     intent=Intent(name="TestIntent", confidence=1),
-                    text="this is a test",
+                    text="this is a test?",
                     raw_text="this is a test",
-                    tokens=["this", "is", "a", "test"],
+                    tokens=["this", "is", "a", "test?"],
                     raw_tokens=["this", "is", "a", "test"],
                 )
             ],
