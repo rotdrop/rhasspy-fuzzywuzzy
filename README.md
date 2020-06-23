@@ -7,51 +7,31 @@
 
 Intent recognition for Rhasspy using [rapidfuzz](https://github.com/rhasspy/rapidfuzz).
 
-## Running With Docker
+## Requirements
+
+* Python 3.7
+
+## Installation
 
 ```bash
-docker run -it rhasspy/rhasspy-fuzzywuzzy:<VERSION> <ARGS>
+$ git clone https://github.com/rhasspy/rhasspy-fuzzywuzzy
+$ cd rhasspy-fuzzywuzzy
+$ ./configure
+$ make
+$ make install
 ```
 
-## Building From Source
-
-Clone the repository and create the virtual environment:
+## Deployment
 
 ```bash
-git clone https://github.com/rhasspy/rhasspy-fuzzywuzzy.git
-cd rhasspy-fuzzywuzzy
-make venv
+$ make dist
 ```
 
-Run the `bin/rhasspy-fuzzywuzzy` script to access the command-line interface:
+## Running
 
 ```bash
-bin/rhasspy-fuzzywuzzy --help
+$ bin/rhasspy-fuzzywuzzy <ARGS>
 ```
-
-## Building the Debian Package
-
-Follow the instructions to build from source, then run:
-
-```bash
-source .venv/bin/activate
-make debian
-```
-
-If successful, you'll find a `.deb` file in the `dist` directory that can be installed with `apt`.
-
-## Building the Docker Image
-
-Follow the instructions to build from source, then run:
-
-```bash
-source .venv/bin/activate
-make docker
-```
-
-This will create a Docker image tagged `rhasspy/rhasspy-fuzzywuzzy:<VERSION>` where `VERSION` comes from the file of the same name in the source root directory.
-
-NOTE: If you add things to the Docker image, make sure to whitelist them in `.dockerignore`.
 
 ## Command-Line Options
 
@@ -96,10 +76,7 @@ optional arguments:
 ```
 usage: rhasspy-fuzzywuzzy train [-h] [--examples EXAMPLES]
                                 [--intent-graph INTENT_GRAPH]
-                                [--sentences SENTENCES] [--slots SLOTS]
-                                [--slot-programs SLOT_PROGRAMS]
-                                [--replace-numbers] [--language LANGUAGE]
-                                [--word-casing {upper,lower,ignore}]
+                                [--sentences SENTENCES]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -108,12 +85,4 @@ optional arguments:
                         Path to write intent graph JSON file
   --sentences SENTENCES
                         Paths to sentences ini files
-  --slots SLOTS         Directories with static slot text files
-  --slot-programs SLOT_PROGRAMS
-                        Directories with slot programs
-  --replace-numbers     Automatically replace numbers and number ranges in
-                        sentences/slots
-  --language LANGUAGE   Language used for number replacement
-  --word-casing {upper,lower,ignore}
-                        Case transformation applied to words
 ```
