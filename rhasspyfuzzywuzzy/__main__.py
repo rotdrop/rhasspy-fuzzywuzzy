@@ -6,6 +6,7 @@ import os
 import sys
 import typing
 from pathlib import Path
+import sqlite3
 
 import rhasspynlu
 from rhasspynlu.intent import Recognition
@@ -53,7 +54,7 @@ def get_args() -> argparse.Namespace:
     recognize_parser.set_defaults(func=recognize)
 
     recognize_parser.add_argument(
-        "--examples", required=True, help="Path to examples JSON file"
+        "--examples", required=True, help="Path to examples SQLite Database"
     )
     recognize_parser.add_argument(
         "--intent-graph", required=True, help="Path to intent graph JSON file"
@@ -74,7 +75,9 @@ def get_args() -> argparse.Namespace:
     )
     train_parser.set_defaults(func=train)
 
-    train_parser.add_argument("--examples", help="Path to write examples JSON file")
+    train_parser.add_argument(
+        "--examples", help="Path to write examples SQLite Database"
+    )
     train_parser.add_argument(
         "--intent-graph", help="Path to write intent graph JSON file"
     )
@@ -102,8 +105,6 @@ def recognize(args: argparse.Namespace):
             intent_graph = rhasspynlu.json_to_graph(graph_dict)
 
         _LOGGER.debug("Loading examples from %s", str(args.examples))
-        with open(args.examples, "r") as examples_file:
-            examples = json.load(examples_file)
 
         _LOGGER.debug("Processing sentences")
         word_transform = get_word_transform(args.word_casing)
@@ -123,7 +124,9 @@ def recognize(args: argparse.Namespace):
             sentence = word_transform(sentence)
 
             # Do recognition
-            recognitions = fuzzywuzzy_recognize(sentence, intent_graph, examples)
+            recognitions = fuzzywuzzy_recognize(
+                sentence, intent_graph, str(args.examples)
+            )
 
             if recognitions:
                 # Intent recognized
@@ -175,9 +178,20 @@ def train(args: argparse.Namespace):
     examples = fuzzywuzzy_train(graph_dict)
 
     if args.examples:
-        # Write examples to JSON file
-        with open(args.examples, "w") as examples_file:
-            json.dump(examples, examples_file)
+        # Write examples to SQLite database
+        conn = sqlite3.connect(str(args.examples))
+        c = conn.cursor()
+        c.execute("""DROP TABLE IF EXISTS intents""")
+        c.execute("""CREATE TABLE intents (sentence text, path text)""")
+
+        for _, sentences in examples.items():
+            for sentence, path in sentences.items():
+                c.execute(
+                    "INSERT INTO intents VALUES (?, ?)", (sentence, json.dumps(path))
+                )
+
+        conn.commit()
+        conn.close()
 
         _LOGGER.debug("Wrote %s", str(args.examples))
     else:
