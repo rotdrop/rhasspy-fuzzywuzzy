@@ -1,9 +1,9 @@
 """Rhasspy intent recognition with rapidfuzz"""
+import json
 import logging
+import sqlite3
 import time
 import typing
-import sqlite3
-import json
 
 import networkx as nx
 import rapidfuzz.fuzz as fuzzy_fuzz
@@ -19,6 +19,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 def extract_one_sqlite(query: str, examples_path: str):
+    """Finds the best text/path for a query"""
     conn = sqlite3.connect(examples_path)
     c = conn.cursor()
     c.execute("SELECT sentence, path FROM intents")
@@ -43,7 +44,7 @@ def extract_one_sqlite(query: str, examples_path: str):
 
     conn.close()
 
-    if result_score is None:
+    if (result_score is None) or (best_path is None):
         return None
 
     return (best_text, json.loads(best_path), result_score)

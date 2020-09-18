@@ -3,10 +3,10 @@ import argparse
 import json
 import logging
 import os
+import sqlite3
 import sys
 import typing
 from pathlib import Path
-import sqlite3
 
 import rhasspynlu
 from rhasspynlu.intent import Recognition
@@ -136,7 +136,7 @@ def recognize(args: argparse.Namespace):
                 recognition = Recognition.empty()
 
             # Print as a line of JSON
-            json.dump(recognition.asdict(), sys.stdout)
+            json.dump(recognition.asdict(), sys.stdout, ensure_ascii=False)
             print("")
             sys.stdout.flush()
 
@@ -187,7 +187,8 @@ def train(args: argparse.Namespace):
         for _, sentences in examples.items():
             for sentence, path in sentences.items():
                 c.execute(
-                    "INSERT INTO intents VALUES (?, ?)", (sentence, json.dumps(path))
+                    "INSERT INTO intents VALUES (?, ?)",
+                    (sentence, json.dumps(path, ensure_ascii=False)),
                 )
 
         conn.commit()
@@ -196,7 +197,7 @@ def train(args: argparse.Namespace):
         _LOGGER.debug("Wrote %s", str(args.examples))
     else:
         # Write results to stdout
-        json.dump(examples, sys.stdout)
+        json.dump(examples, sys.stdout, ensure_ascii=False)
         print("")
         sys.stdout.flush()
 
