@@ -17,6 +17,7 @@ _LOGGER = logging.getLogger(__name__)
 
 # -----------------------------------------------------------------------------
 
+
 def extract_one_sqlite(query: str, examples_path: str):
     """Finds the best text/path for a query"""
     conn = sqlite3.connect(examples_path)
@@ -32,7 +33,7 @@ def extract_one_sqlite(query: str, examples_path: str):
     c.execute(
         "SELECT path FROM intents ORDER BY rowid LIMIT 1 OFFSET ?", (result[2],)
     )
-    best_path =  c.fetchone()[0]
+    best_path = c.fetchone()[0]
 
     conn.close()
 
