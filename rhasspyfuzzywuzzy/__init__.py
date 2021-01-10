@@ -37,7 +37,7 @@ def extract_one_sqlite(query: str, examples_path: str):
 
     conn.close()
 
-    return (result[0][0], best_path, result[1])
+    return (result[0][0], json.loads(best_path), result[1])
 
 
 def recognize(
