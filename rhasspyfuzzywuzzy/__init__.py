@@ -6,8 +6,7 @@ import time
 import typing
 
 import networkx as nx
-import rapidfuzz.process as fuzzy_process
-import rapidfuzz.utils as fuzz_utils
+import rapidfuzz
 import rhasspynlu
 from rhasspynlu.intent import Recognition
 
@@ -24,7 +23,8 @@ def extract_one_sqlite(query: str, examples_path: str):
     c = conn.cursor()
     c.execute("SELECT sentence FROM intents ORDER BY rowid")
 
-    result = fuzzy_process.extractOne([query], c, processor=lambda s: s[0])
+    result = rapidfuzz.process.extractOne(
+        [query], c, processor=lambda s: s[0], scorer=rapidfuzz.fuzz.ratio)
 
     if not result:
         conn.close()
@@ -56,7 +56,7 @@ def recognize(
     # Find closest match
     # pylint: disable=unpacking-non-sequence
     best_text, best_path, best_score = extract_one_sqlite(
-        fuzz_utils.default_process(input_text), examples_path
+        rapidfuzz.utils.default_process(input_text), examples_path
     )
     _LOGGER.debug("input=%s, match=%s, score=%s", input_text, best_text, best_score)
 
