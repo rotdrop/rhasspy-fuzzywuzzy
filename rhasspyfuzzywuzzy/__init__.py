@@ -24,15 +24,14 @@ def extract_one_sqlite(query: str, examples_path: str):
     c.execute("SELECT sentence FROM intents ORDER BY rowid")
 
     result = rapidfuzz.process.extractOne(
-        [query], c, processor=lambda s: s[0], scorer=rapidfuzz.fuzz.ratio)
+        [query], c, processor=lambda s: s[0], scorer=rapidfuzz.fuzz.ratio
+    )
 
     if not result:
         conn.close()
         return result
 
-    c.execute(
-        "SELECT path FROM intents ORDER BY rowid LIMIT 1 OFFSET ?", (result[2],)
-    )
+    c.execute("SELECT path FROM intents ORDER BY rowid LIMIT 1 OFFSET ?", (result[2],))
     best_path = c.fetchone()[0]
 
     conn.close()
